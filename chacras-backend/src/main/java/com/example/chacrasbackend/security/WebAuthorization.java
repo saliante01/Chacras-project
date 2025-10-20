@@ -23,7 +23,7 @@ public class WebAuthorization {
         http
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/chacras/public/**").permitAll() // solo público
+                        .requestMatchers("/api/chacras/public/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/logout").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/register").permitAll()
@@ -33,7 +33,7 @@ public class WebAuthorization {
                         .anyRequest().denyAll()
                 )
 
-                // 🔑 LOGIN
+
                 .formLogin(form -> form
                         .loginProcessingUrl("/api/login")
                         .usernameParameter("email")
