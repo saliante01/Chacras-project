@@ -1,0 +1,68 @@
+<nav class="navbar">
+  <!-- Logo -->
+  <div class="logo">
+    <span class="logo-icon">🌾</span>
+    <span class="logo-text">Chacras</span>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div class="search-bar">
+    <!-- Campo nombre -->
+    <div class="search-section">
+      <label>Nombre</label>
+      <input
+        type="text"
+        placeholder="Ej: Los Álamos..."
+        [(ngModel)]="nombre"
+        (input)="onInputChange(nombre, 'nombre')"
+      />
+      <button class="clear-btn" *ngIf="nombre" (click)="limpiarCampo('nombre')">✕</button>
+
+      <!-- Dropdown -->
+      <ul class="dropdown" *ngIf="sugerencias.length && campoActivo === 'nombre'">
+        <li *ngFor="let s of sugerencias" (click)="seleccionarSugerencia(s)">
+          <span class="icon">🏡</span> <b>{{ s }}</b>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Campo ubicación -->
+    <div class="search-section">
+      <label>Ubicación</label>
+      <input
+        type="text"
+        placeholder="Ej: Temuco..."
+        [(ngModel)]="ubicacion"
+        (input)="onInputChange(ubicacion, 'ubicacion')"
+      />
+      <button class="clear-btn" *ngIf="ubicacion" (click)="limpiarCampo('ubicacion')">✕</button>
+
+      <ul class="dropdown" *ngIf="sugerencias.length && campoActivo === 'ubicacion'">
+        <li *ngFor="let s of sugerencias" (click)="seleccionarSugerencia(s)">
+          <span class="icon">📍</span> {{ s }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Campo dueño -->
+    <div class="search-section">
+      <label>Dueño</label>
+      <input
+        type="text"
+        placeholder="Ej: Sebastián..."
+        [(ngModel)]="dueno"
+        (input)="onInputChange(dueno, 'dueno')"
+      />
+      <button class="clear-btn" *ngIf="dueno" (click)="limpiarCampo('dueno')">✕</button>
+
+      <ul class="dropdown" *ngIf="sugerencias.length && campoActivo === 'dueno'">
+        <li *ngFor="let s of sugerencias" (click)="seleccionarSugerencia(s)">
+          <span class="icon">👤</span> {{ s }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Botón -->
+    <button class="search-btn" (click)="onSearch()">🔍 Buscar</button>
+  </div>
+</nav>

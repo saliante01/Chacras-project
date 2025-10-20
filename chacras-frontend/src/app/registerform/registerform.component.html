@@ -1,0 +1,44 @@
+<div class="register-container">
+  <h2>Crear cuenta</h2>
+
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-group">
+      <label for="name">Nombre completo</label>
+      <input id="name" type="text" formControlName="name" placeholder="Ej: Juan Perez" />
+      <small *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+        Ingresa un nombre válido (mínimo 3 caracteres).
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Correo electrónico</label>
+      <input id="email" type="email" formControlName="email" placeholder="usuario1@correo.com" />
+      <small *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
+        Ingresa un correo válido.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" formControlName="password" placeholder="••••••••" />
+      <small *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+        La contraseña debe tener entre 6 y 32 caracteres.
+      </small>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirmar contraseña</label>
+      <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••" />
+      <small *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+        Repite tu contraseña.
+      </small>
+    </div>
+
+    <button type="submit" [disabled]="loading || registerForm.invalid">
+      {{ loading ? 'Registrando...' : 'Registrarme' }}
+    </button>
+
+    <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  </form>
+</div>
