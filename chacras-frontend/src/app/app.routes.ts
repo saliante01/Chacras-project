@@ -5,7 +5,7 @@ import { HomepageComponent } from './homepage/homepage.component';
 import { HomeadminComponent } from './homeadmin/homeadmin.component';
 import { HomeuserComponent } from './homeuser/homeuser.component';
 export const routes: Routes = [
-  { path: '', redirectTo: 'login', pathMatch: 'full' }, // ruta por defecto
+  { path: '', redirectTo: 'home', pathMatch: 'full' }, // ruta por defecto
   { path: 'login', component: LoginformComponent },
   { path: 'register', component: RegisterformComponent },
   { path: 'home', component: HomepageComponent},
