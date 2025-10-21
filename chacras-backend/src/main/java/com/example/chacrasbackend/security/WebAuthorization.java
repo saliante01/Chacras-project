@@ -47,7 +47,7 @@ public class WebAuthorization {
                         .requestMatchers("/api/chacras/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/chacras/**").hasAnyAuthority("USER", "ADMIN")
-
+                        .requestMatchers("/h2-console/**").permitAll()
 
                         .anyRequest().denyAll()
                 )
