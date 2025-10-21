@@ -15,21 +15,12 @@ public class Chacra {
 
     private String nombre;
     private String ubicacion;
-    private String imagenUrl; // simularemos imagen con texto o URL
 
+    private String imagenUrl; // ✅ aquí guardamos la ruta de la imagen en disco
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private User user;
-
-    public Chacra(String nombre, String ubicacion, String imagenUrl, User user) {
-        this.nombre = nombre;
-        this.ubicacion = ubicacion;
-        this.imagenUrl = imagenUrl;
-        this.user = user;
-    }
 }
-
-
