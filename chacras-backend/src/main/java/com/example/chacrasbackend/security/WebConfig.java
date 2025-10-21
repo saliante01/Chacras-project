@@ -7,6 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+    //archivo de configuración
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
