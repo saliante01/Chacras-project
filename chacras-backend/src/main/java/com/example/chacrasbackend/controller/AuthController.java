@@ -13,7 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.config.http.SessionCreationPolicy;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -33,12 +34,16 @@ public class AuthController {
 
         // Validaciones básicas
         if (newUser.getEmail() == null || newUser.getPassword() == null || newUser.getName() == null) {
-            return new ResponseEntity<>("Faltan datos requeridos.", HttpStatus.BAD_REQUEST);
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Faltan datos requeridos."));
         }
 
         // Evitar duplicados
         if (userRepository.findByEmail(newUser.getEmail()) != null) {
-            return new ResponseEntity<>("El email ya está registrado.", HttpStatus.CONFLICT);
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("message", "El email ya está registrado."));
         }
 
         // Encriptar contraseña
@@ -47,15 +52,18 @@ public class AuthController {
         // Guardar usuario
         userRepository.save(newUser);
 
-        // 🔒 Respuesta sin cookie
-        return new ResponseEntity<>("Usuario registrado exitosamente.", HttpStatus.CREATED);
+        // ✅ Responder JSON válido (no texto plano)
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of("message", "Usuario registrado exitosamente."));
     }
-
 
     @GetMapping("/user/current")
     public ResponseEntity<Object> getCurrentUser(Authentication authentication) {
         if (authentication == null) {
-            return new ResponseEntity<>("No autenticado.", HttpStatus.UNAUTHORIZED);
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "No autenticado."));
         }
 
         User user = userRepository.findByEmail(authentication.getName());
@@ -72,6 +80,8 @@ public class AuthController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return new ResponseEntity<>("Sesión cerrada correctamente.", HttpStatus.OK);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(Map.of("message", "Sesión cerrada correctamente."));
     }
 }

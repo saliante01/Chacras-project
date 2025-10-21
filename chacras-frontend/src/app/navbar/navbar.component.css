@@ -52,6 +52,30 @@
   flex-wrap: nowrap;
 }
 
+.auth-area {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+}
+
+.login-btn {
+  background: transparent;
+  border: 1px solid #ff385c;
+  color: #ff385c;
+  padding: 0.45rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, transform 0.15s;
+}
+
+.login-btn:hover,
+.login-btn:focus {
+  background: #ff385c;
+  color: white;
+  transform: translateY(-1px);
+}
+
 .search-section {
   display: flex;
   flex-direction: column;

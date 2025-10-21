@@ -1,6 +1,6 @@
 .login-container {
   max-width: 380px;
-  margin: 4rem auto;
+  margin: 4rem auto 1rem auto;
   padding: 2rem;
   background: #fff;
   border-radius: 16px;
@@ -8,11 +8,35 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
-h2 {
+h1.login-title {
   text-align: center;
+  margin-bottom: 1rem;
+  color: #2e7d32;
+}
+
+/* Botón de Registrarse (arriba del formulario) */
+.top-actions {
+  display: flex;
+  justify-content: center;
   margin-bottom: 1.5rem;
 }
 
+.register-inline {
+  background: #1f6feb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.register-inline:hover {
+  background: #1558c1;
+}
+
+/* Formulario */
 .form-group {
   margin-bottom: 1rem;
 }
@@ -37,7 +61,7 @@ input:focus {
   border-color: #2e7d32;
 }
 
-button {
+button.login-btn {
   width: 100%;
   padding: .75rem;
   border: none;
@@ -47,9 +71,10 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color .3s;
+  font-weight: 600;
 }
 
-button:hover:not(:disabled) {
+button.login-btn:hover:not(:disabled) {
   background-color: #256428;
 }
 
@@ -68,4 +93,28 @@ small {
   color: #d32f2f;
   text-align: center;
   font-weight: 500;
+}
+
+/* Botón de Volver al Inicio fuera del contenedor */
+.bottom-action {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.back-home-small {
+  background: transparent;
+  border: 1px solid #2e7d32;
+  color: #2e7d32;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.back-home-small:hover {
+  background: #2e7d32;
+  color: white;
 }

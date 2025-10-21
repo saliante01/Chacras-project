@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 interface Chacra {
   nombre: string;
@@ -70,5 +71,12 @@ export class NavbarComponent {
     if (campo === 'ubicacion') this.ubicacion = '';
     if (campo === 'dueno') this.dueno = '';
     this.sugerencias = [];
+  }
+
+  // Navegar a la página de login
+  constructor(private router: Router) {}
+
+  onLogin() {
+    this.router.navigate(['/login']);
   }
 }

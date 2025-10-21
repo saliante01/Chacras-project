@@ -1,7 +1,13 @@
-<div class="login-container">
-  <h2>Iniciar sesión</h2>
+<div class="login-container modern">
+  <h1 class="login-title">Login</h1>
 
-  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
+  <!-- Botón de registrarse encima del formulario -->
+  <div class="top-actions">
+    <button type="button" class="register-inline" (click)="goRegister()">Registrarse</button>
+  </div>
+
+  <!-- Formulario de login -->
+  <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
     <!-- Correo -->
     <div class="form-group">
       <label for="email">User</label>
@@ -32,10 +38,15 @@
       </small>
     </div>
 
-    <button type="submit" [disabled]="loading || loginForm.invalid">
-      {{ loading ? 'Iniciando...' : 'Ingresar' }}
+    <button type="submit" class="login-btn" [disabled]="loading || loginForm.invalid">
+      {{ loading ? 'Iniciando...' : 'Login' }}
     </button>
 
     <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
   </form>
+</div>
+
+<!-- Botón fuera del formulario -->
+<div class="bottom-action">
+  <button type="button" class="back-home-small" (click)="goHome()">Volver a Inicio</button>
 </div>

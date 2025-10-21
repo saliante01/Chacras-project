@@ -1,8 +1,20 @@
 <div class="cards-container">
-  <div *ngIf="chacrasFiltradas.length === 0" class="no-results">
-    No se encontraron chacras con esos filtros.
+  <!-- Estado: Cargando -->
+  <div *ngIf="loading" class="loading">
+    Cargando chacras...
   </div>
 
+  <!-- Estado: Error -->
+  <div *ngIf="!loading && errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Estado: Sin resultados -->
+  <div *ngIf="!loading && chacrasFiltradas.length === 0 && !errorMessage" class="no-results">
+    No se encontraron chacras disponibles.
+  </div>
+
+  <!-- Tarjetas -->
   <div class="chacra-card" *ngFor="let chacra of chacrasFiltradas">
     <div class="image-wrapper">
       <img [src]="chacra.imagenUrl" [alt]="chacra.nombre" />
@@ -11,8 +23,7 @@
     <div class="card-content">
       <h3>{{ chacra.nombre }}</h3>
       <p class="location">📍 {{ chacra.ubicacion }}</p>
-      <p class="owner">👤 Dueño: {{ chacra.dueno }}</p>
-      <p class="description">{{ chacra.descripcion }}</p>
+      <p class="owner">👤 Propietario: {{ chacra.usuarioEmail }}</p>
     </div>
   </div>
 </div>

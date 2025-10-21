@@ -1,0 +1,47 @@
+<div class="cards-container">
+  <div *ngIf="usuariosFiltrados.length === 0" class="no-results">
+    No se encontraron usuarios con esos filtros.
+  </div>
+
+  <div class="user-card" *ngFor="let user of usuariosFiltrados">
+    <div class="image-wrapper" (click)="abrirPop(user)">
+      <img [src]="user.imagenUrl" [alt]="user.nombre" />
+    </div>
+
+    <div class="card-content">
+      <h3>{{ user.nombre }}</h3>
+      <p class="role">🧩 Rol: {{ user.rol }}</p>
+      <p class="email">📧 {{ user.email }}</p>
+      <p class="description">{{ user.descripcion }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- Pop-up principal -->
+<div class="popup-overlay" *ngIf="usuarioSeleccionado && !mostrarConfirmacion" (click)="cerrarPop($event)">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="cerrarPop($event)">×</button>
+
+    <img [src]="usuarioSeleccionado.imagenUrl" [alt]="usuarioSeleccionado.nombre" class="popup-image" />
+
+    <h3>{{ usuarioSeleccionado.nombre }}</h3>
+    <p class="popup-role">{{ usuarioSeleccionado.rol }}</p>
+    <p class="popup-email">{{ usuarioSeleccionado.email }}</p>
+
+    <div class="popup-actions">
+      <button class="update-btn" (click)="irAActualizar(usuarioSeleccionado)">Actualizar</button>
+      <button class="delete-btn" (click)="abrirConfirmacion()">Borrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Pop-up de confirmación de borrado -->
+<div class="popup-overlay" *ngIf="mostrarConfirmacion" (click)="cerrarConfirmacion($event)">
+  <div class="popup-content small" (click)="$event.stopPropagation()">
+    <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+    <div class="popup-actions">
+      <button class="confirm-btn" (click)="confirmarBorrado()">Sí</button>
+      <button class="cancel-btn" (click)="cerrarConfirmacion($event)">No</button>
+    </div>
+  </div>
+</div>

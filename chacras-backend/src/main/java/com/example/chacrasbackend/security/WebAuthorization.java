@@ -34,7 +34,7 @@ public class WebAuthorization {
                     config.setAllowedOrigins(List.of("http://localhost:4200", "http://localhost:8080"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(List.of("*"));
-                    config.setAllowCredentials(true);
+                    config.setAllowCredentials(false);
                     return config;
                 }))
 
@@ -48,6 +48,7 @@ public class WebAuthorization {
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/api/chacras/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
 
                         .anyRequest().denyAll()
                 )
