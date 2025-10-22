@@ -1,26 +1,39 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth-service.service'; // ajusta la ruta según tu estructura
 
 @Component({
   selector: 'app-headeruser',
+  standalone: true,
   imports: [],
   templateUrl: './headeruser.component.html',
   styleUrls: ['./headeruser.component.css']
 })
 export class HeaderuserComponent {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   onLogout() {
-    // Clear common storage keys used for auth. Adjust as your app uses.
-    try {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      sessionStorage.clear();
-    } catch (e) {
-      console.warn('Error clearing storage during logout', e);
-    }
-    // Navigate to login page
-    this.router.navigate(['/home']);
-  }
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('✅ Sesión cerrada correctamente');
 
+        // 🔹 Limpieza local (por si guardas algo en localStorage)
+        localStorage.clear();
+        sessionStorage.clear();
+
+        // 🔹 Redirigir al login o home público
+        this.router.navigate(['/home']);
+      },
+      error: (error) => {
+        console.error('❌ Error al cerrar sesión:', error);
+        // Aunque falle, limpiamos por seguridad
+        localStorage.clear();
+        sessionStorage.clear();
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 }

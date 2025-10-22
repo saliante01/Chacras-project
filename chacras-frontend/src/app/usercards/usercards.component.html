@@ -1,32 +1,41 @@
 <div class="cards-container">
-  <div *ngIf="usuariosFiltrados.length === 0" class="no-results">
-    No se encontraron usuarios con esos filtros.
+  <!-- ⏳ Cargando -->
+  <div *ngIf="cargando" class="loading">Cargando chacras...</div>
+
+  <!-- ⚠️ Error -->
+  <div *ngIf="!cargando && errorMessage" class="error">{{ errorMessage }}</div>
+
+  <!-- 📭 Sin resultados -->
+  <div *ngIf="!cargando && chacras.length === 0 && !errorMessage" class="no-results">
+    No hay chacras asociadas a tu usuario.
   </div>
 
-  <div class="user-card" *ngFor="let user of usuariosFiltrados">
-    <div class="image-wrapper" (click)="abrirPop(user)">
-      <img [src]="user.imagenUrl" [alt]="user.nombre" />
+  <!-- 🟩 Tarjetas -->
+  <div class="user-card" *ngFor="let chacra of chacras" (click)="abrirPop(chacra)">
+    <div class="image-wrapper">
+      <img [src]="chacra.imagenUrl || 'https://via.placeholder.com/400x200?text=Sin+Imagen'" [alt]="chacra.nombre" />
     </div>
 
     <div class="card-content">
-      <h3>{{ user.nombre }}</h3>
-      <p class="role">🧩 Rol: {{ user.rol }}</p>
-      <p class="email">📧 {{ user.email }}</p>
-      <p class="description">{{ user.descripcion }}</p>
+      <h3>{{ chacra.nombre }}</h3>
+      <p class="location">📍 {{ chacra.ubicacion }}</p>
+      <p class="email">👤 {{ chacra.usuarioEmail }}</p>
     </div>
   </div>
 </div>
 
-<!-- Pop-up principal -->
+<!-- 💬 Pop-up principal -->
 <div class="popup-overlay" *ngIf="usuarioSeleccionado && !mostrarConfirmacion" (click)="cerrarPop($event)">
   <div class="popup-content" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="cerrarPop($event)">×</button>
 
-    <img [src]="usuarioSeleccionado.imagenUrl" [alt]="usuarioSeleccionado.nombre" class="popup-image" />
+    <img [src]="usuarioSeleccionado.imagenUrl || 'https://via.placeholder.com/400x200?text=Sin+Imagen'"
+         [alt]="usuarioSeleccionado.nombre"
+         class="popup-image" />
 
     <h3>{{ usuarioSeleccionado.nombre }}</h3>
-    <p class="popup-role">{{ usuarioSeleccionado.rol }}</p>
-    <p class="popup-email">{{ usuarioSeleccionado.email }}</p>
+    <p class="popup-location">📍 {{ usuarioSeleccionado.ubicacion }}</p>
+    <p class="popup-owner">👤 Dueño: {{ usuarioSeleccionado.usuarioEmail }}</p>
 
     <div class="popup-actions">
       <button class="update-btn" (click)="irAActualizar(usuarioSeleccionado)">Actualizar</button>
@@ -35,10 +44,10 @@
   </div>
 </div>
 
-<!-- Pop-up de confirmación de borrado -->
+<!-- ⚠️ Pop-up de confirmación -->
 <div class="popup-overlay" *ngIf="mostrarConfirmacion" (click)="cerrarConfirmacion($event)">
   <div class="popup-content small" (click)="$event.stopPropagation()">
-    <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+    <p>¿Estás seguro de que deseas eliminar esta chacra?</p>
     <div class="popup-actions">
       <button class="confirm-btn" (click)="confirmarBorrado()">Sí</button>
       <button class="cancel-btn" (click)="cerrarConfirmacion($event)">No</button>

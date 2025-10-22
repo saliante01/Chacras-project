@@ -1,38 +1,22 @@
 <div class="login-container modern">
   <h1 class="login-title">Login</h1>
 
-  <!-- Botón de registrarse encima del formulario -->
   <div class="top-actions">
     <button type="button" class="register-inline" (click)="goRegister()">Registrarse</button>
   </div>
 
-  <!-- Formulario de login -->
   <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
-    <!-- Correo -->
     <div class="form-group">
-      <label for="email">User</label>
-      <input
-        type="email"
-        id="email"
-        formControlName="email"
-        placeholder="usuario@correo.com"
-        autocomplete="username"
-      />
+      <label for="email">Usuario</label>
+      <input type="email" id="email" formControlName="email" placeholder="usuario@correo.com" />
       <small *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
         Ingresa un correo válido.
       </small>
     </div>
 
-    <!-- Contraseña -->
     <div class="form-group">
-      <label for="password">Password</label>
-      <input
-        type="password"
-        id="password"
-        formControlName="password"
-        placeholder="••••••••"
-        autocomplete="current-password"
-      />
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" formControlName="password" placeholder="••••••••" />
       <small *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
         La contraseña debe tener entre 4 y 32 caracteres.
       </small>
@@ -46,7 +30,6 @@
   </form>
 </div>
 
-<!-- Botón fuera del formulario -->
 <div class="bottom-action">
   <button type="button" class="back-home-small" (click)="goHome()">Volver a Inicio</button>
 </div>

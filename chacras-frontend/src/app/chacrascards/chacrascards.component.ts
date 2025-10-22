@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChacraService } from '../chacra.service';
 import { Chacra } from '../chacra.service';
+
 @Component({
   selector: 'app-chacrascards',
   standalone: true,
@@ -9,13 +10,13 @@ import { Chacra } from '../chacra.service';
   templateUrl: './chacrascards.component.html',
   styleUrls: ['./chacrascards.component.css']
 })
-export class ChacrascardsComponent implements OnInit, OnChanges {
-  @Input() filters: { nombre?: string; ubicacion?: string; usuarioEmail?: string } = {};
+export class ChacrascardsComponent implements OnChanges {
+  @Input() filters: { nombre?: string; ubicacion?: string; dueno?: string } = {};
 
   allChacras: Chacra[] = [];
   chacrasFiltradas: Chacra[] = [];
-  loading = true;
-  errorMessage = '';
+  loading = false;
+  error = '';
 
   constructor(private chacraService: ChacraService) {}
 
@@ -29,33 +30,40 @@ export class ChacrascardsComponent implements OnInit, OnChanges {
     }
   }
 
-  cargarChacras(): void {
+  // 🔹 Cargar chacras desde el backend
+  cargarChacras() {
     this.loading = true;
-    this.chacraService.getChacras().subscribe({
+    this.error = '';
+
+    this.chacraService.getPublicChacras().subscribe({
       next: (data) => {
-        // Ajustamos las rutas de imagen (backend devuelve rutas relativas)
-        this.allChacras = data.map(chacra => ({
-          ...chacra,
-          imagenUrl: `http://localhost:8080${chacra.imagenUrl}`
+        // ✅ Construir la URL absoluta si el backend devuelve rutas relativas
+        this.allChacras = data.map((c) => ({
+          ...c,
+          imagenUrl: c.imagenUrl.startsWith('http')
+            ? c.imagenUrl
+            : `http://localhost:8080${c.imagenUrl}`
         }));
+        this.chacrasFiltradas = [...this.allChacras];
         this.aplicarFiltros();
         this.loading = false;
       },
-      error: (error) => {
-        console.error('Error al cargar chacras:', error);
-        this.errorMessage = 'No se pudieron cargar las chacras.';
+      error: (err) => {
+        console.error('Error al obtener chacras:', err);
+        this.error = 'No se pudieron cargar las chacras.';
         this.loading = false;
       }
     });
   }
 
-  aplicarFiltros(): void {
-    const { nombre, ubicacion, usuarioEmail } = this.filters;
+  // 🔹 Filtrar chacras según los filtros recibidos
+  aplicarFiltros() {
+    const { nombre, ubicacion, dueno } = this.filters;
 
-    this.chacrasFiltradas = this.allChacras.filter(c =>
+    this.chacrasFiltradas = this.allChacras.filter((c) =>
       (!nombre || c.nombre.toLowerCase().includes(nombre.toLowerCase())) &&
       (!ubicacion || c.ubicacion.toLowerCase().includes(ubicacion.toLowerCase())) &&
-      (!usuarioEmail || c.usuarioEmail.toLowerCase().includes(usuarioEmail.toLowerCase()))
+      (!dueno || (c.usuarioEmail && c.usuarioEmail.toLowerCase().includes(dueno.toLowerCase())))
     );
   }
 }

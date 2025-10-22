@@ -194,4 +194,62 @@ public class ChacraController {
             return new ResponseEntity<>("Error al subir imagen: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PostMapping("/admin/create")
+    public ResponseEntity<Object> createChacraForUser(
+            @RequestParam("nombre") String nombre,
+            @RequestParam("ubicacion") String ubicacion,
+            @RequestParam("userEmail") String userEmail,
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            Authentication authentication) {
+
+        try {
+            // 🧠 Verificamos que el usuario autenticado sea admin
+            boolean isAdmin = authentication.getAuthorities()
+                    .stream()
+                    .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+
+            if (!isAdmin) {
+                return new ResponseEntity<>("No autorizado. Solo administradores pueden crear chacras para otros usuarios.", HttpStatus.FORBIDDEN);
+            }
+
+            // 🔍 Buscamos al usuario destino
+            User user = userRepository.findByEmail(userEmail);
+            if (user == null) {
+                return new ResponseEntity<>("Usuario no encontrado con email: " + userEmail, HttpStatus.NOT_FOUND);
+            }
+
+            // 📁 Si hay imagen, la guardamos
+            String imagenUrl = null;
+            if (file != null && !file.isEmpty()) {
+                String uploadDir = "uploads/chacras/";
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String fileName = "chacra_admin_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                imagenUrl = "/uploads/chacras/" + fileName;
+            }
+
+            // 🧱 Crear la nueva chacra
+            Chacra chacra = new Chacra();
+            chacra.setNombre(nombre);
+            chacra.setUbicacion(ubicacion);
+            chacra.setUser(user);
+            chacra.setImagenUrl(imagenUrl != null ? imagenUrl : "");
+
+            Chacra savedChacra = chacraService.createChacra(chacra);
+
+            return new ResponseEntity<>(new ChacraDTO(savedChacra), HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al crear chacra: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }

@@ -84,4 +84,6 @@ public class AuthController {
                 .status(HttpStatus.OK)
                 .body(Map.of("message", "Sesión cerrada correctamente."));
     }
+
+
 }
