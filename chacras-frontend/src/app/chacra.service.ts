@@ -58,6 +58,13 @@ export class ChacraService {
     }).pipe(catchError(this.handleError));
   }
 
+  // 🔹 Eliminar chacra por ID
+  deleteChacra(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, {
+      withCredentials: true
+    }).pipe(catchError(this.handleError));
+  }
+
   // 🔹 Manejo de errores centralizado
   private handleError(error: HttpErrorResponse) {
     console.error('Error en solicitud de chacra:', error);
@@ -65,6 +72,7 @@ export class ChacraService {
     if (error.status === 0) message = 'No hay conexión con el servidor.';
     else if (error.status === 403) message = 'No autorizado.';
     else if (error.status === 404) message = 'Chacra no encontrada.';
+    else if (error.status === 500) message = 'Error interno del servidor.';
     else if (error.error?.message) message = error.error.message;
 
     return throwError(() => new Error(message));

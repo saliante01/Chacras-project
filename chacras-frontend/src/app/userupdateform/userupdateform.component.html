@@ -1,1 +1,31 @@
-<p>userupdateform works!</p>
+<div class="update-container">
+  <button class="back-btn" (click)="volver()">← Volver a mi perfil</button>
+
+  <h2>Actualizar Chacra</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+    <div class="form-group">
+      <label for="nombre">Nombre:</label>
+      <input id="nombre" type="text" formControlName="nombre" />
+    </div>
+
+    <div class="form-group">
+      <label for="ubicacion">Ubicación:</label>
+      <input id="ubicacion" type="text" formControlName="ubicacion" />
+    </div>
+
+    <div class="form-group">
+      <label for="file">Imagen (opcional):</label>
+      <input id="file" type="file" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+
+    <div *ngIf="previewUrl" class="preview">
+      <p>Vista previa:</p>
+      <img [src]="previewUrl" alt="Vista previa" />
+    </div>
+
+    <button type="submit" class="save-btn">Guardar cambios</button>
+  </form>
+
+  <p class="message" *ngIf="message">{{ message }}</p>
+</div>

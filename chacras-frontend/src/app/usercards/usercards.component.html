@@ -13,7 +13,7 @@
   <!-- 🟩 Tarjetas -->
   <div class="user-card" *ngFor="let chacra of chacras" (click)="abrirPop(chacra)">
     <div class="image-wrapper">
-      <img [src]="chacra.imagenUrl || 'https://via.placeholder.com/400x200?text=Sin+Imagen'" [alt]="chacra.nombre" />
+      <img [src]="getImageUrl(chacra.imagenUrl)" [alt]="chacra.nombre" />
     </div>
 
     <div class="card-content">
@@ -29,13 +29,13 @@
   <div class="popup-content" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="cerrarPop($event)">×</button>
 
-    <img [src]="usuarioSeleccionado.imagenUrl || 'https://via.placeholder.com/400x200?text=Sin+Imagen'"
-         [alt]="usuarioSeleccionado.nombre"
+    <img [src]="getImageUrl(usuarioSeleccionado?.imagenUrl)"
+         [alt]="usuarioSeleccionado?.nombre"
          class="popup-image" />
 
-    <h3>{{ usuarioSeleccionado.nombre }}</h3>
-    <p class="popup-location">📍 {{ usuarioSeleccionado.ubicacion }}</p>
-    <p class="popup-owner">👤 Dueño: {{ usuarioSeleccionado.usuarioEmail }}</p>
+    <h3>{{ usuarioSeleccionado?.nombre }}</h3>
+    <p class="popup-location">📍 {{ usuarioSeleccionado?.ubicacion }}</p>
+    <p class="popup-owner">👤 Dueño: {{ usuarioSeleccionado?.usuarioEmail }}</p>
 
     <div class="popup-actions">
       <button class="update-btn" (click)="irAActualizar(usuarioSeleccionado)">Actualizar</button>

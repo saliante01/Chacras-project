@@ -17,12 +17,16 @@ export class UsercardsComponent implements OnInit {
   cargando = true;
   errorMessage = '';
 
-  constructor(private chacraService: ChacraService, private router: Router) {}
+  constructor(
+    private chacraService: ChacraService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.cargarChacras();
   }
 
+  // 🔹 Obtener chacras del usuario logueado
   cargarChacras(): void {
     this.cargando = true;
     this.chacraService.getMyChacras().subscribe({
@@ -38,6 +42,7 @@ export class UsercardsComponent implements OnInit {
     });
   }
 
+  // 🟢 Pop-up principal
   abrirPop(chacra: Chacra) {
     this.usuarioSeleccionado = chacra;
   }
@@ -48,8 +53,15 @@ export class UsercardsComponent implements OnInit {
     this.mostrarConfirmacion = false;
   }
 
+  // 🟡 Acciones del pop-up
   irAActualizar(chacra: Chacra) {
-    this.router.navigate(['/updateform'], { state: { chacra } });
+    this.cerrarPop(new Event('close'));
+
+    // ✅ Guardamos chacra en sessionStorage
+    sessionStorage.setItem('chacraEdit', JSON.stringify(chacra));
+
+    // ✅ Navegamos a la ruta correcta
+    this.router.navigate(['/updateform']);
   }
 
   abrirConfirmacion() {
@@ -61,11 +73,40 @@ export class UsercardsComponent implements OnInit {
     this.mostrarConfirmacion = false;
   }
 
+  // 🔴 Eliminar chacra (DELETE real al backend)
   confirmarBorrado() {
     if (!this.usuarioSeleccionado) return;
-    alert(`Chacra "${this.usuarioSeleccionado.nombre}" eliminada correctamente.`);
-    this.chacras = this.chacras.filter(c => c.id !== this.usuarioSeleccionado!.id);
-    this.usuarioSeleccionado = null;
-    this.mostrarConfirmacion = false;
+
+    const id = this.usuarioSeleccionado.id;
+
+    this.chacraService.deleteChacra(id).subscribe({
+      next: () => {
+        console.log(`✅ Chacra ${id} eliminada correctamente`);
+        this.chacras = this.chacras.filter(c => c.id !== id);
+        this.usuarioSeleccionado = null;
+        this.mostrarConfirmacion = false;
+        alert('✅ Chacra eliminada correctamente.');
+      },
+      error: (err) => {
+        console.error('❌ Error al eliminar chacra:', err);
+        alert('⚠️ Error al eliminar la chacra. Inténtalo nuevamente.');
+        this.mostrarConfirmacion = false;
+      }
+    });
+  }
+
+  // 🖼️ Arregla las rutas de las imágenes
+  getImageUrl(imagenUrl: string | null | undefined): string {
+    if (!imagenUrl) {
+      return 'https://via.placeholder.com/400x200?text=Sin+Imagen';
+    }
+
+    // Si ya es una URL absoluta (por ejemplo, Pexels o CDN)
+    if (imagenUrl.startsWith('http')) {
+      return imagenUrl;
+    }
+
+    // Si es una ruta relativa del backend (/uploads/...)
+    return `http://localhost:8080${imagenUrl}`;
   }
 }

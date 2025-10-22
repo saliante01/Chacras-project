@@ -95,36 +95,64 @@ public class ChacraController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<ChacraDTO> updateChacra(@PathVariable Long id,
-                                                  @RequestBody Chacra updatedChacra,
-                                                  Authentication authentication) {
-        User user = userRepository.findByEmail(authentication.getName());
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+    public ResponseEntity<Object> updateChacraFlexible(
+            @PathVariable Long id,
+            @RequestParam(required = false) String nombre,
+            @RequestParam(required = false) String ubicacion,
+            @RequestParam(required = false) MultipartFile file,
+            Authentication authentication) {
+
+        try {
+            User user = userRepository.findByEmail(authentication.getName());
+            if (user == null) {
+                return new ResponseEntity<>("Usuario no autenticado", HttpStatus.FORBIDDEN);
+            }
+
+            Chacra existing = chacraService.getChacraById(id);
+            if (existing == null) {
+                return new ResponseEntity<>("Chacra no encontrada", HttpStatus.NOT_FOUND);
+            }
+
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+            boolean isOwner = existing.getUser() != null && existing.getUser().getEmail().equals(user.getEmail());
+
+            if (!isAdmin && !isOwner) {
+                return new ResponseEntity<>("No autorizado para actualizar esta chacra", HttpStatus.FORBIDDEN);
+            }
+
+            // ✅ Actualizar solo los campos presentes
+            if (nombre != null && !nombre.isEmpty()) {
+                existing.setNombre(nombre);
+            }
+            if (ubicacion != null && !ubicacion.isEmpty()) {
+                existing.setUbicacion(ubicacion);
+            }
+
+            // 📸 Si se envía una imagen, la guardamos
+            if (file != null && !file.isEmpty()) {
+                String uploadDir = "uploads/chacras/";
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String fileName = "chacra_" + id + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                existing.setImagenUrl("/uploads/chacras/" + fileName);
+            }
+
+            Chacra updated = chacraService.createChacra(existing);
+            return new ResponseEntity<>(new ChacraDTO(updated), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al actualizar chacra: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        Chacra existing = chacraService.getAllChacras().stream()
-                .filter(c -> c.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-
-        if (existing == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        boolean isAdmin = authentication.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
-
-        if (!isAdmin && !existing.getUser().getEmail().equals(user.getEmail())) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        Chacra updated = chacraService.updateChacra(id, updatedChacra);
-        if (updated == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(new ChacraDTO(updated), HttpStatus.OK);
     }
+
 
 
     @DeleteMapping("/{id}")

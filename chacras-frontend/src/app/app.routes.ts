@@ -20,7 +20,7 @@ export const routes: Routes = [
   { path: 'updateform', component: UserupdateformComponent },
   // helper: accept /deleteform as common spelling and redirect to the existing path
   { path: 'deleteform', redirectTo: 'deteleform' },
-  { path: '**', redirectTo: 'login' } // 404 redirige al login
+  { path: '**', redirectTo: 'home' } // 404 redirige al login
 ];
 
 
