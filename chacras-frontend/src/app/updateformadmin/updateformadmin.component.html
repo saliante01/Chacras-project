@@ -1,20 +1,18 @@
-<div class="admin-container">
-  <h2>🏡 Crear nueva Chacra (Administrador)</h2>
+<app-headeruser></app-headeruser>
+<div class="update-container">
+  <button class="back-btn" (click)="volver()">← Volver a administrar</button>
+
+  <h2>Actualizar Chacra</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
     <div class="form-group">
       <label for="nombre">Nombre:</label>
-      <input id="nombre" type="text" formControlName="nombre" required />
+      <input id="nombre" type="text" formControlName="nombre" />
     </div>
 
     <div class="form-group">
       <label for="ubicacion">Ubicación:</label>
-      <input id="ubicacion" type="text" formControlName="ubicacion" required />
-    </div>
-
-    <div class="form-group">
-      <label for="userEmail">Correo del usuario:</label>
-      <input id="userEmail" type="email" formControlName="userEmail" required />
+      <input id="ubicacion" type="text" formControlName="ubicacion" />
     </div>
 
     <div class="form-group">
@@ -27,9 +25,8 @@
       <img [src]="previewUrl" alt="Vista previa" />
     </div>
 
-    <button type="submit" [disabled]="cargando">Crear Chacra</button>
+    <button type="submit" class="save-btn">Guardar cambios</button>
   </form>
 
   <p class="message" *ngIf="message">{{ message }}</p>
 </div>
-

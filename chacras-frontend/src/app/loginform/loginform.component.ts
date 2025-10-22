@@ -54,7 +54,7 @@ export class LoginformComponent {
 
         // Redirigir según el rol
         if (res.rol === 'ADMIN') {
-          this.router.navigate(['/homeadmin']);
+          this.router.navigate(['/headeradmin']);
         } else {
           this.router.navigate(['/homeuser']);
         }
