@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { HeaderuserComponent } from "../headeruser/headeruser.component";
 
 @Component({
   selector: 'app-homeadmin',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HeaderuserComponent],
   templateUrl: './homeadmin.component.html',
   styleUrls: ['./homeadmin.component.css']
 })

@@ -25,17 +25,17 @@
 </div>
 
 <!-- 💬 Pop-up principal -->
-<div class="popup-overlay" *ngIf="usuarioSeleccionado && !mostrarConfirmacion" (click)="cerrarPop($event)">
+<div class="popup-overlay" *ngIf="mostrarConfirmacion === false && usuarioSeleccionado">
   <div class="popup-content" (click)="$event.stopPropagation()">
     <button class="close-btn" (click)="cerrarPop($event)">×</button>
 
-    <img [src]="getImageUrl(usuarioSeleccionado?.imagenUrl)"
-         [alt]="usuarioSeleccionado?.nombre"
+    <img [src]="getImageUrl(usuarioSeleccionado.imagenUrl)"
+         [alt]="usuarioSeleccionado.nombre"
          class="popup-image" />
 
-    <h3>{{ usuarioSeleccionado?.nombre }}</h3>
-    <p class="popup-location">📍 {{ usuarioSeleccionado?.ubicacion }}</p>
-    <p class="popup-owner">👤 Dueño: {{ usuarioSeleccionado?.usuarioEmail }}</p>
+    <h3>{{ usuarioSeleccionado.nombre }}</h3>
+    <p class="popup-location">📍 {{ usuarioSeleccionado.ubicacion }}</p>
+    <p class="popup-owner">👤 Dueño: {{ usuarioSeleccionado.usuarioEmail }}</p>
 
     <div class="popup-actions">
       <button class="update-btn" (click)="irAActualizar(usuarioSeleccionado)">Actualizar</button>
@@ -45,7 +45,7 @@
 </div>
 
 <!-- ⚠️ Pop-up de confirmación -->
-<div class="popup-overlay" *ngIf="mostrarConfirmacion" (click)="cerrarConfirmacion($event)">
+<div class="popup-overlay" *ngIf="mostrarConfirmacion">
   <div class="popup-content small" (click)="$event.stopPropagation()">
     <p>¿Estás seguro de que deseas eliminar esta chacra?</p>
     <div class="popup-actions">
