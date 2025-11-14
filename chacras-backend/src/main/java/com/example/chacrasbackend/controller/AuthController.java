@@ -1,5 +1,6 @@
 package com.example.chacrasbackend.controller;
 
+import com.example.chacrasbackend.model.Role;
 import com.example.chacrasbackend.model.User;
 import com.example.chacrasbackend.model.UserDTO;
 import com.example.chacrasbackend.repository.UserRepository;
@@ -49,14 +50,18 @@ public class AuthController {
         // Encriptar contraseña
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
+        // 👇 ASIGNAR ROL POR DEFECTO
+        newUser.setRole(Role.USER);
+
         // Guardar usuario
         userRepository.save(newUser);
 
-        // ✅ Responder JSON válido (no texto plano)
+        // Respuesta
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(Map.of("message", "Usuario registrado exitosamente."));
     }
+
 
     @GetMapping("/user/current")
     public ResponseEntity<Object> getCurrentUser(Authentication authentication) {

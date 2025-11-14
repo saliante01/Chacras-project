@@ -23,20 +23,17 @@ public class WebAuthentication {
     public UserDetailsService userDetailsService() {
         return email -> {
             User user = userRepository.findByEmail(email);
+
             if (user != null) {
-                if (user.getEmail().equals("admin@chacras.cl")) {
-                    return new org.springframework.security.core.userdetails.User(
-                            user.getEmail(),
-                            user.getPassword(),
-                            AuthorityUtils.createAuthorityList("ADMIN")
-                    );
-                } else {
-                    return new org.springframework.security.core.userdetails.User(
-                            user.getEmail(),
-                            user.getPassword(),
-                            AuthorityUtils.createAuthorityList("USER")
-                    );
-                }
+                // Obtén el rol desde el enum directamente
+                String role = user.getRole().name(); // ADMIN o USER
+
+                return new org.springframework.security.core.userdetails.User(
+                        user.getEmail(),
+                        user.getPassword(),
+                        AuthorityUtils.createAuthorityList(role)
+                );
+
             } else {
                 throw new UsernameNotFoundException("Unknown user: " + email);
             }
