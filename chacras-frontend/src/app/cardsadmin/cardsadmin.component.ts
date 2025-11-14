@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { ChacraService, Chacra } from '../chacra.service';
 
 @Component({
@@ -17,7 +18,17 @@ export class CardsadminComponent implements OnInit {
   cargando = true;
   errorMessage = '';
 
-  constructor(private chacraService: ChacraService, private router: Router) {}
+  constructor(
+    private chacraService: ChacraService,
+    private router: Router
+  ) {
+    // 🔁 Cada vez que se navega a esta ruta, recargo las chacras
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.cargarChacras();
+      });
+  }
 
   ngOnInit(): void {
     this.cargarChacras();
@@ -26,9 +37,10 @@ export class CardsadminComponent implements OnInit {
   // 🔹 Obtener todas las chacras (endpoint público)
   cargarChacras(): void {
     this.cargando = true;
+    this.errorMessage = '';
+
     this.chacraService.getPublicChacras().subscribe({
       next: (data) => {
-        // Corregimos URL de imágenes
         this.chacras = data.map(chacra => ({
           ...chacra,
           imagenUrl: chacra.imagenUrl
@@ -39,15 +51,16 @@ export class CardsadminComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error al obtener chacras:', err);
-        this.errorMessage = 'Error al cargar las chacras.';
+        this.errorMessage = err.message || 'Error al cargar las chacras.';
         this.cargando = false;
       }
     });
   }
 
-  // 🟢 Abrir popup
+  // 🟢 Abrir popup con info de la chacra
   abrirPop(chacra: Chacra): void {
     this.chacraSeleccionada = chacra;
+    this.mostrarConfirmacion = false;
   }
 
   cerrarPop(event: Event): void {
@@ -63,7 +76,7 @@ export class CardsadminComponent implements OnInit {
     this.router.navigate(['/updateformadmin']);
   }
 
-  // 🔴 Borrar chacra
+  // 🔴 Borrar chacra: abrir confirmación
   abrirConfirmacion(): void {
     this.mostrarConfirmacion = true;
   }
@@ -81,6 +94,7 @@ export class CardsadminComponent implements OnInit {
     this.chacraService.deleteChacra(id).subscribe({
       next: () => {
         console.log(`✅ Chacra ${id} eliminada correctamente`);
+        // La saco de la lista local
         this.chacras = this.chacras.filter(c => c.id !== id);
         this.chacraSeleccionada = null;
         this.mostrarConfirmacion = false;
@@ -88,7 +102,7 @@ export class CardsadminComponent implements OnInit {
       },
       error: (err) => {
         console.error('❌ Error al eliminar chacra:', err);
-        alert('⚠️ Error al eliminar la chacra. Inténtalo nuevamente.');
+        alert(err.message || '⚠️ Error al eliminar la chacra. Inténtalo nuevamente.');
         this.mostrarConfirmacion = false;
       }
     });

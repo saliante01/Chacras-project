@@ -59,6 +59,7 @@ public class ChacraController {
     public ResponseEntity<Object> createChacraWithImage(
             @RequestParam("nombre") String nombre,
             @RequestParam("ubicacion") String ubicacion,
+            @RequestParam(value = "descripcion", required = false) String descripcion,
             @RequestParam("file") MultipartFile file,
             Authentication authentication) {
 
@@ -81,6 +82,7 @@ public class ChacraController {
             Chacra chacra = new Chacra();
             chacra.setNombre(nombre);
             chacra.setUbicacion(ubicacion);
+            chacra.setDescripcion(descripcion);
             chacra.setUser(user);
             chacra.setActive(true); // 👈 SIEMPRE ACTIVA AL CREAR
             chacra.setImagenUrl("/uploads/chacras/" + fileName);
@@ -100,6 +102,7 @@ public class ChacraController {
             @PathVariable Long id,
             @RequestParam(required = false) String nombre,
             @RequestParam(required = false) String ubicacion,
+            @RequestParam(required = false) String descripcion,
             @RequestParam(required = false) MultipartFile file,
             Authentication authentication) {
 
@@ -113,6 +116,7 @@ public class ChacraController {
             if (existing == null || !existing.getActive()) {
                 return new ResponseEntity<>("Chacra no encontrada o desactivada", HttpStatus.NOT_FOUND);
             }
+            if (descripcion != null && !descripcion.isEmpty()) existing.setDescripcion(descripcion);
 
             boolean isAdmin = authentication.getAuthorities().stream()
                     .anyMatch(a -> a.getAuthority().equals("ADMIN"));
@@ -143,6 +147,14 @@ public class ChacraController {
         } catch (Exception e) {
             return new ResponseEntity<>("Error al actualizar chacra: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/public/{id}")
+    public ResponseEntity<ChacraDTO> getChacraPublicById(@PathVariable Long id) {
+        Chacra chacra = chacraService.getChacraById(id);
+        if (chacra == null || !Boolean.TRUE.equals(chacra.getActive())) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(new ChacraDTO(chacra), HttpStatus.OK);
     }
 
 

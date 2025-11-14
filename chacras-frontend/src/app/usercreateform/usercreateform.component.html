@@ -4,6 +4,7 @@
   <h2>Crear nueva Chacra</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+    
     <div class="form-group">
       <label for="nombre">Nombre:</label>
       <input id="nombre" type="text" formControlName="nombre" required />
@@ -12,6 +13,17 @@
     <div class="form-group">
       <label for="ubicacion">Ubicación:</label>
       <input id="ubicacion" type="text" formControlName="ubicacion" required />
+    </div>
+
+    <!-- 🆕 DESCRIPCIÓN -->
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <textarea
+        id="descripcion"
+        rows="4"
+        formControlName="descripcion"
+        placeholder="Contá brevemente cómo es la chacra, qué ofrece, etc.">
+      </textarea>
     </div>
 
     <div class="form-group">
@@ -24,7 +36,9 @@
       <img [src]="previewUrl" alt="Vista previa de imagen" />
     </div>
 
-    <button type="submit" class="save-btn" [disabled]="form.invalid || !file">Crear Chacra</button>
+    <button type="submit" class="save-btn" [disabled]="form.invalid || !file">
+      Crear Chacra
+    </button>
   </form>
 
   <p class="message" *ngIf="message">{{ message }}</p>

@@ -48,6 +48,7 @@ public class WebAuthorization {
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/admin/all").hasAuthority("ADMIN")
                         .anyRequest().denyAll()
                 )
 

@@ -1,8 +1,10 @@
 <app-headeruser></app-headeruser>
+
 <div class="admin-container">
-  <h2>🏡 Crear nueva Chacra (Administrador)</h2>
+  <h2>🏡 Crear nueva Chacra</h2>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+
     <div class="form-group">
       <label for="nombre">Nombre:</label>
       <input id="nombre" type="text" formControlName="nombre" required />
@@ -16,6 +18,16 @@
     <div class="form-group">
       <label for="userEmail">Correo del usuario:</label>
       <input id="userEmail" type="email" formControlName="userEmail" required />
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <textarea
+        id="descripcion"
+        rows="4"
+        formControlName="descripcion"
+        placeholder="Contá brevemente cómo es la chacra, qué ofrece, etc.">
+      </textarea>
     </div>
 
     <div class="form-group">
@@ -33,4 +45,3 @@
 
   <p class="message" *ngIf="message">{{ message }}</p>
 </div>
-

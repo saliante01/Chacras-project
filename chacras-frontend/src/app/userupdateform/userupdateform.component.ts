@@ -25,30 +25,30 @@ export class UserupdateformComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-  // 🔹 Recuperar chacra desde navigation state o sessionStorage
-  const navigation = this.router.getCurrentNavigation();
-  const chacra =
-    navigation?.extras.state?.['chacra'] ||
-    JSON.parse(sessionStorage.getItem('chacraEdit') || 'null');
+    // 🔹 Recuperar chacra desde navigation state o sessionStorage
+    const navigation = this.router.getCurrentNavigation();
+    const chacra =
+      navigation?.extras.state?.['chacra'] ||
+      JSON.parse(sessionStorage.getItem('chacraEdit') || 'null');
 
-  if (!chacra) {
-    alert('No se ha seleccionado ninguna chacra para editar.');
-    this.router.navigate(['/homeuser']);
-    return;
+    if (!chacra) {
+      alert('No se ha seleccionado ninguna chacra para editar.');
+      this.router.navigate(['/homeuser']);
+      return;
+    }
+
+    // ✅ Guardamos ID
+    this.chacraId = chacra.id;
+
+    // ✅ Cargamos valores iniciales (AGREGADA descripcion)
+    this.form = this.fb.group({
+      nombre: [chacra.nombre || ''],
+      ubicacion: [chacra.ubicacion || ''],
+      descripcion: [chacra.descripcion || '']   // 👈 NUEVO
+    });
+
+    this.previewUrl = chacra.imagenUrl || null;
   }
-
-  // ✅ Guardamos ID
-  this.chacraId = chacra.id;
-
-  // ✅ Cargamos valores iniciales
-  this.form = this.fb.group({
-    nombre: [chacra.nombre || ''],
-    ubicacion: [chacra.ubicacion || '']
-  });
-
-  this.previewUrl = chacra.imagenUrl || null;
-}
-
 
   // 📸 Detectar selección de archivo
   onFileSelected(event: Event): void {
@@ -70,11 +70,12 @@ export class UserupdateformComponent implements OnInit {
   onSubmit(): void {
     if (!this.chacraId) return;
 
-    const { nombre, ubicacion } = this.form.value;
+    const { nombre, ubicacion, descripcion } = this.form.value;
 
     const formData = new FormData();
     if (nombre) formData.append('nombre', nombre);
     if (ubicacion) formData.append('ubicacion', ubicacion);
+    if (descripcion) formData.append('descripcion', descripcion);  // 👈 NUEVO
     if (this.file) formData.append('file', this.file);
 
     fetch(`http://localhost:8080/api/chacras/${this.chacraId}`, {
@@ -82,18 +83,18 @@ export class UserupdateformComponent implements OnInit {
       credentials: 'include', // ✅ Mantiene la cookie
       body: formData
     })
-    .then(async res => {
-      if (res.ok) {
-        this.message = '✅ Chacra actualizada correctamente';
-        setTimeout(() => this.router.navigate(['/homeuser']), 1200);
-      } else {
-        const text = await res.text();
-        throw new Error(text || 'Error al actualizar chacra');
-      }
-    })
-    .catch(err => {
-      console.error('❌ Error en actualización:', err);
-      this.message = '❌ Error al actualizar la chacra';
-    });
+      .then(async res => {
+        if (res.ok) {
+          this.message = '✅ Chacra actualizada correctamente';
+          setTimeout(() => this.router.navigate(['/homeuser']), 1200);
+        } else {
+          const text = await res.text();
+          throw new Error(text || 'Error al actualizar chacra');
+        }
+      })
+      .catch(err => {
+        console.error('❌ Error en actualización:', err);
+        this.message = '❌ Error al actualizar la chacra';
+      });
   }
 }

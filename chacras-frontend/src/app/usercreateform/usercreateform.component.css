@@ -20,9 +20,15 @@
   margin-bottom: 1rem;
 }
 
-input[type="text"], input[type="file"] {
+input[type="text"],
+input[type="file"],
+textarea {
   width: 100%;
   padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-family: inherit;
+  resize: vertical;
 }
 
 .save-btn {

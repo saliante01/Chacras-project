@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChacraService } from '../chacra.service';
-import { Chacra } from '../chacra.service';
+import { ChacraService, Chacra } from '../chacra.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chacrascards',
@@ -18,7 +18,7 @@ export class ChacrascardsComponent implements OnChanges {
   loading = false;
   error = '';
 
-  constructor(private chacraService: ChacraService) {}
+  constructor(private chacraService: ChacraService, private router: Router) {}
 
   ngOnInit(): void {
     this.cargarChacras();
@@ -30,20 +30,20 @@ export class ChacrascardsComponent implements OnChanges {
     }
   }
 
-  // 🔹 Cargar chacras desde el backend
+  // 🔹 Cargar chacras desde backend
   cargarChacras() {
     this.loading = true;
     this.error = '';
 
     this.chacraService.getPublicChacras().subscribe({
       next: (data) => {
-        // ✅ Construir la URL absoluta si el backend devuelve rutas relativas
         this.allChacras = data.map((c) => ({
           ...c,
           imagenUrl: c.imagenUrl.startsWith('http')
             ? c.imagenUrl
             : `http://localhost:8080${c.imagenUrl}`
         }));
+
         this.chacrasFiltradas = [...this.allChacras];
         this.aplicarFiltros();
         this.loading = false;
@@ -56,7 +56,7 @@ export class ChacrascardsComponent implements OnChanges {
     });
   }
 
-  // 🔹 Filtrar chacras según los filtros recibidos
+  // 🔹 Aplicar filtros recibidos desde barra de búsqueda / filtros
   aplicarFiltros() {
     const { nombre, ubicacion, dueno } = this.filters;
 
@@ -65,5 +65,12 @@ export class ChacrascardsComponent implements OnChanges {
       (!ubicacion || c.ubicacion.toLowerCase().includes(ubicacion.toLowerCase())) &&
       (!dueno || (c.usuarioEmail && c.usuarioEmail.toLowerCase().includes(dueno.toLowerCase())))
     );
+  }
+
+  // ⭐ NUEVO: ir al portal / vista individual de la chacra
+  irADetalle(chacra: Chacra) {
+    this.router.navigate(['/chacras', chacra.id], {
+      state: { chacra }
+    });
   }
 }

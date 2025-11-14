@@ -9,6 +9,7 @@ import { UserdeleteformComponent } from './userdeleteform/userdeleteform.compone
 import { UserupdateformComponent } from './userupdateform/userupdateform.component';
 import { HeaderadminComponent } from './headeradmin/headeradmin.component';
 import { UpdateformadminComponent } from './updateformadmin/updateformadmin.component';
+import { ChacraPortalComponent } from './chacra-portal/chacra-portal.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' }, // ruta por defecto -> login
@@ -22,6 +23,7 @@ export const routes: Routes = [
   { path: 'updateform', component: UserupdateformComponent },
   { path: 'headeradmin', component: HeaderadminComponent},
   { path: 'updateformadmin', component: UpdateformadminComponent},
+  { path: 'chacras/:id', component: ChacraPortalComponent },
   // helper: accept /deleteform as common spelling and redirect to the existing path
   { path: 'deleteform', redirectTo: 'deteleform' },
   { path: '**', redirectTo: 'home' } // 404 redirige al login

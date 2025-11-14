@@ -18,17 +18,17 @@ export class HomeadminComponent {
   cargando = false;
   previewUrl: string | ArrayBuffer | null = null;
 
-  private apiUrl = 'http://localhost:8080/api/chacras/admin/create';
+  private apiUrl = 'http://localhost:8080/api/chacras/full';
 
   constructor(private fb: FormBuilder, private http: HttpClient) {
     this.form = this.fb.group({
       nombre: [''],
       ubicacion: [''],
-      userEmail: ['']
+      descripcion: [''],
+      userEmail: ['']   // 👈 AGREGADO
     });
   }
 
-  // 📸 Detectar selección de archivo
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
@@ -39,17 +39,19 @@ export class HomeadminComponent {
     }
   }
 
-  // 📨 Enviar chacra al backend
   onSubmit(): void {
-    if (!this.form.value.nombre || !this.form.value.ubicacion || !this.form.value.userEmail) {
-      this.message = '⚠️ Debes completar los campos obligatorios.';
+    const { nombre, ubicacion, descripcion, userEmail } = this.form.value;
+
+    if (!nombre || !ubicacion || !userEmail) {
+      this.message = '⚠️ Debes completar nombre, ubicación y correo.';
       return;
     }
 
     const formData = new FormData();
-    formData.append('nombre', this.form.value.nombre);
-    formData.append('ubicacion', this.form.value.ubicacion);
-    formData.append('userEmail', this.form.value.userEmail);
+    formData.append('nombre', nombre);
+    formData.append('ubicacion', ubicacion);
+    formData.append('userEmail', userEmail); // 👈 IGUAL QUE EN POSTMAN
+    if (descripcion) formData.append('descripcion', descripcion);
     if (this.file) formData.append('file', this.file);
 
     this.cargando = true;
@@ -66,7 +68,7 @@ export class HomeadminComponent {
       },
       error: (err) => {
         console.error('❌ Error al crear chacra:', err);
-        this.message = '❌ No se pudo crear la chacra. Revisa los datos.';
+        this.message = '❌ No se pudo crear la chacra. Revisá los datos.';
         this.cargando = false;
       }
     });

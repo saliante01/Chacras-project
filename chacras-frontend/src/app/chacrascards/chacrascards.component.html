@@ -1,15 +1,12 @@
 <div class="cards-container">
-  <!-- Mensaje de carga -->
   <div *ngIf="loading" class="loading">
     🔄 Cargando chacras...
   </div>
 
-  <!-- Error -->
   <div *ngIf="error && !loading" class="error">
     ⚠️ {{ error }}
   </div>
 
-  <!-- Sin resultados -->
   <div *ngIf="!loading && !error && chacrasFiltradas.length === 0" class="no-results">
     No se encontraron chacras con esos filtros.
   </div>
@@ -18,6 +15,8 @@
   <div
     class="chacra-card"
     *ngFor="let chacra of chacrasFiltradas"
+    (click)="irADetalle(chacra)"
+    style="cursor:pointer"
   >
     <div class="image-wrapper">
       <img [src]="chacra.imagenUrl" [alt]="chacra.nombre" />

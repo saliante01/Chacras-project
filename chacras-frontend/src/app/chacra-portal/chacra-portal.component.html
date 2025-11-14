@@ -1,0 +1,23 @@
+<div class="top-bar">
+  <button class="home-btn" (click)="volverHome()">
+    🏠 Home
+  </button>
+</div>
+
+<div class="portal-container" *ngIf="!cargando && chacra; else loadingOrError">
+  <img [src]="chacra.imagenUrl" [alt]="chacra.nombre" class="portal-image" />
+
+  <h1>{{ chacra.nombre }}</h1>
+  <p class="location">📍 {{ chacra.ubicacion }}</p>
+  <p class="owner">👤 {{ chacra.usuarioEmail }}</p>
+
+  <h2>Descripción</h2>
+  <p class="description">
+    {{ chacra.descripcion || 'Esta chacra aún no tiene descripción.' }}
+  </p>
+</div>
+
+<ng-template #loadingOrError>
+  <div *ngIf="cargando" class="loading">Cargando chacra...</div>
+  <div *ngIf="!cargando && errorMessage" class="error">{{ errorMessage }}</div>
+</ng-template>

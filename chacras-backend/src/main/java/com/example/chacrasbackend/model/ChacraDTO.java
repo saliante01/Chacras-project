@@ -10,6 +10,7 @@ public class ChacraDTO {
     private Long id;
     private String nombre;
     private String ubicacion;
+    private String descripcion;
     private String imagenUrl; // ✅ ahora enviamos la ruta pública de la imagen
     private String usuarioEmail; // para mostrar el dueño de la chacra
 
@@ -17,6 +18,7 @@ public class ChacraDTO {
         this.id = chacra.getId();
         this.nombre = chacra.getNombre();
         this.ubicacion = chacra.getUbicacion();
+        this.descripcion= chacra.getDescripcion();
         this.imagenUrl = chacra.getImagenUrl();
         this.usuarioEmail = chacra.getUser() != null ? chacra.getUser().getEmail() : null;
     }

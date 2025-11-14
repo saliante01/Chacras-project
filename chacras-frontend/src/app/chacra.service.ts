@@ -9,6 +9,7 @@ export interface Chacra {
   ubicacion: string;
   imagenUrl: string;
   usuarioEmail: string;
+  descripcion: string;
 }
 
 @Injectable({
@@ -19,14 +20,20 @@ export class ChacraService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔹 Obtener todas las chacras públicas
+  // 🔹 Obtener todas las chacras públicas (solo activas)
   getPublicChacras(): Observable<Chacra[]> {
     return this.http.get<Chacra[]>(`${this.apiUrl}/public`, {
       withCredentials: true
     }).pipe(catchError(this.handleError));
   }
 
-  // 🔹 Obtener chacras del usuario autenticado
+  getPublicChacraById(id: number): Observable<Chacra> {
+    return this.http.get<Chacra>(`${this.apiUrl}/public/${id}`, {
+      withCredentials: true
+    }).pipe(catchError(this.handleError));
+  }
+
+  // 🔹 Obtener chacras del usuario autenticado (solo activas)
   getMyChacras(): Observable<Chacra[]> {
     return this.http.get<Chacra[]>(`${this.apiUrl}/mine`, {
       withCredentials: true
@@ -34,10 +41,12 @@ export class ChacraService {
   }
 
   // 🔹 Crear chacra como usuario (usa endpoint /full)
-  createChacra(nombre: string, ubicacion: string, file: File): Observable<any> {
+  // ⚠️ AHORA INCLUYE DESCRIPCIÓN
+  createChacra(nombre: string, ubicacion: string, descripcion: string, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('nombre', nombre);
     formData.append('ubicacion', ubicacion);
+    formData.append('descripcion', descripcion);  // ✔ AGREGADO
     formData.append('file', file);
 
     return this.http.post(`${this.apiUrl}/full`, formData, {
@@ -50,15 +59,17 @@ export class ChacraService {
     const formData = new FormData();
     formData.append('nombre', nombre);
     formData.append('ubicacion', ubicacion);
-    formData.append('emailUsuario', emailUsuario);
-    formData.append('file', file);
+    formData.append('userEmail', emailUsuario);
+    if (file) {
+      formData.append('file', file);
+    }
 
-    return this.http.post(`${this.apiUrl}/admin/full`, formData, {
+    return this.http.post(`${this.apiUrl}/admin/create`, formData, {
       withCredentials: true
     }).pipe(catchError(this.handleError));
   }
 
-  // 🔹 Eliminar chacra por ID
+  // 🔹 Eliminar chacra por ID (borrado lógico en backend)
   deleteChacra(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, {
       withCredentials: true

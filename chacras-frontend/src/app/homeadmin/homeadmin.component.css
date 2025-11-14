@@ -23,10 +23,13 @@ label {
   margin-bottom: 0.3rem;
 }
 
-input {
+input,
+textarea {
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 8px;
+  font-family: inherit;
+  resize: vertical;
 }
 
 button {

@@ -14,6 +14,17 @@
       <input id="ubicacion" type="text" formControlName="ubicacion" />
     </div>
 
+    <!-- 🆕 DESCRIPCIÓN -->
+    <div class="form-group">
+      <label for="descripcion">Descripción:</label>
+      <textarea
+        id="descripcion"
+        rows="4"
+        formControlName="descripcion"
+        placeholder="Contá brevemente cómo es la chacra, qué ofrece, etc.">
+      </textarea>
+    </div>
+
     <div class="form-group">
       <label for="file">Imagen (opcional):</label>
       <input id="file" type="file" (change)="onFileSelected($event)" accept="image/*" />

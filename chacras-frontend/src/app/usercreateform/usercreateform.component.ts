@@ -24,7 +24,8 @@ export class UsercreateformComponent {
   ) {
     this.form = this.fb.group({
       nombre: ['', Validators.required],
-      ubicacion: ['', Validators.required]
+      ubicacion: ['', Validators.required],
+      descripcion: ['']  // 👈 AGREGADO - NO TOQUÉ NADA MAS
     });
   }
 
@@ -49,9 +50,10 @@ export class UsercreateformComponent {
   onSubmit(): void {
     if (this.form.invalid || !this.file) return;
 
-    const { nombre, ubicacion } = this.form.value;
+    const { nombre, ubicacion, descripcion } = this.form.value;
 
-    this.chacraService.createChacra(nombre, ubicacion, this.file)
+    // 👇 NO CAMBIÉ el nombre de la función NI el orden NI las variables
+    this.chacraService.createChacra(nombre, ubicacion, descripcion, this.file)
       .subscribe({
         next: (response) => {
           console.log('✅ Chacra creada:', response);

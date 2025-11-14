@@ -15,7 +15,8 @@ public class Chacra {
 
     private String nombre;
     private String ubicacion;
-
+    @Column(length = 1000)
+    private String descripcion;
     private String imagenUrl; // ✅ aquí guardamos la ruta de la imagen en disco
 
     @Column(nullable = false)
