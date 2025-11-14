@@ -1,5 +1,4 @@
 package com.example.chacrasbackend.service;
-
 import com.example.chacrasbackend.model.Chacra;
 import com.example.chacrasbackend.model.User;
 import com.example.chacrasbackend.repository.ChacraRepository;
@@ -15,22 +14,32 @@ public class ChacraService {
 
     private final ChacraRepository chacraRepository;
 
-    //  Obtener todas las chacras
+    // 🔹 Obtener TODAS las chacras (activas e inactivas) - por si la necesitás para administración
     public List<Chacra> getAllChacras() {
         return chacraRepository.findAll();
     }
 
-    //  Obtener chacras por usuario
+    // 🔹 Obtener solo chacras ACTIVAS (para la vista pública)
+    public List<Chacra> getAllActiveChacras() {
+        return chacraRepository.findByActiveTrue();
+    }
+
+    // 🔹 Obtener chacras por usuario (todas, si alguna vez las necesitás)
     public List<Chacra> getChacrasByUser(User user) {
         return chacraRepository.findByUser(user);
     }
 
-    //  Crear o guardar chacra
+    // 🔹 Obtener solo chacras ACTIVAS de un usuario (para /mine)
+    public List<Chacra> getActiveChacrasByUser(User user) {
+        return chacraRepository.findByUserAndActiveTrue(user);
+    }
+
+    // 🔹 Crear o guardar chacra
     public Chacra createChacra(Chacra chacra) {
         return chacraRepository.save(chacra);
     }
 
-    //  Actualizar chacra (sin modificar imagen si no se envía)
+    // 🔹 Actualizar chacra (sin modificar imagen si no se envía)
     public Chacra updateChacra(Long id, Chacra updatedChacra) {
         Optional<Chacra> existingOpt = chacraRepository.findById(id);
         if (existingOpt.isPresent()) {
@@ -44,17 +53,23 @@ public class ChacraService {
                 existing.setImagenUrl(updatedChacra.getImagenUrl());
             }
 
+            // ⚠️ No tocamos el campo active acá
             return chacraRepository.save(existing);
         }
         return null;
     }
 
-    //  Eliminar chacra
+    // 🔥 BORRADO LÓGICO: marcar como inactive en vez de borrar
     public void deleteChacra(Long id) {
-        chacraRepository.deleteById(id);
+        Optional<Chacra> existingOpt = chacraRepository.findById(id);
+        if (existingOpt.isPresent()) {
+            Chacra existing = existingOpt.get();
+            existing.setActive(false);      // 👈 acá está la magia
+            chacraRepository.save(existing);
+        }
     }
 
-    //  Obtener chacra por ID
+    // 🔹 Obtener chacra por ID (puede traer activa o inactiva)
     public Chacra getChacraById(Long id) {
         return chacraRepository.findById(id).orElse(null);
     }

@@ -11,5 +11,7 @@ import java.util.List;
 @Repository
 public interface ChacraRepository extends JpaRepository<Chacra, Long> {
     List<Chacra> findByUser(User user);
+    List<Chacra> findByUserAndActiveTrue(User user);
+    List<Chacra> findByActiveTrue();
 }
 

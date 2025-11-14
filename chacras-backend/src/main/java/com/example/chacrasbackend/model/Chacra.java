@@ -18,6 +18,9 @@ public class Chacra {
 
     private String imagenUrl; // ✅ aquí guardamos la ruta de la imagen en disco
 
+    @Column(nullable = false)
+    private Boolean active = true;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
